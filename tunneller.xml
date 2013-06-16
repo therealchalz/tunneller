@@ -38,4 +38,19 @@
 			<remotePort>8502</remotePort>
 		</forward>
 	</tunnel>
+	<tunnel>
+		<user>logger</user>
+		<host>192.168.69.21</host>
+		<password>wordofpass</password>
+		<forward type="L">
+			<localPort>8086</localPort>
+			<host>127.0.0.1</host>
+			<remotePort>80</remotePort>
+		</forward>
+		<forward type="R">
+			<localPort>503</localPort>
+			<host>127.0.0.1</host>
+			<remotePort>8503</remotePort>
+		</forward>
+	</tunnel>
 </tunneller>

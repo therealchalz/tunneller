@@ -20,6 +20,7 @@
  ******************************************************************************/
 package ca.brood.tunneler;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -148,6 +149,14 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 			log.fatal("A password or a keyfile must be configured.");
 			return false;
 		}
+		
+		if (!keyfile.equals("")) {
+			File f = new File(keyfile);
+			if (!f.exists() || !f.isFile() || !f.canRead()) {
+				log.fatal("Cannot find/read keyfile: %s", keyfile);
+				return false;
+			}
+		}
 		if (user.equals("")) {
 			log.fatal("No user configured.");
 			return false;
@@ -189,6 +198,8 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 	 */
 	@Override
 	public void run() {
+		Thread.currentThread().setName(host+":"+port);
+		
 		log.info("Thread started");
 		
 		respawn();
@@ -272,7 +283,7 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 			ssh.configure(host, port, user);
 			if (password != null)
 				ssh.setPasswordAuth(password);
-			if (keyfile != null)
+			if (keyfile != null && !keyfile.equals(""))
 				ssh.setKeyfileAuth(keyfile, passphrase);
 			
 			ret = true;

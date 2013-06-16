@@ -20,12 +20,15 @@
  ******************************************************************************/
 package ca.brood.tunneler;
 
+import java.util.ArrayList;
+
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import ca.brood.brootils.xml.XMLConfigurable;
 import ca.brood.brootils.xml.XMLFileLoader;
@@ -33,7 +36,7 @@ import ca.brood.brootils.xml.XMLFileLoader;
 public class Tunneller  implements Daemon, XMLConfigurable {
 	private static Tunneller tunnellerDaemon;
 	
-	private TunnelKeepaliveThread tunnelThread;
+	private ArrayList<TunnelKeepaliveThread> tunnelThreads;
 	private String configFile;
 	private Logger log;
 	
@@ -42,7 +45,7 @@ public class Tunneller  implements Daemon, XMLConfigurable {
 	}
 	
 	public Tunneller() {
-		tunnelThread = new TunnelKeepaliveThread();
+		tunnelThreads = new ArrayList<TunnelKeepaliveThread>();
 		configFile = "tunneller.xml";
 		log = LogManager.getLogger(Tunneller.class);
 	}
@@ -77,20 +80,39 @@ public class Tunneller  implements Daemon, XMLConfigurable {
 		}
 		
 		if (success) {
-			tunnelThread.start();
+			for (TunnelKeepaliveThread thread: tunnelThreads) {
+				thread.start();
+			}
 		}
 	}
 	
 	private void tunnellerStop() {
 		log.info("Tunneller is stopping...");
-		tunnelThread.stop();
+		for (TunnelKeepaliveThread thread: tunnelThreads) {
+			thread.stop();
+		}
 		log.info("Tunneller is done.");
 	}
 	
 	@Override
 	public boolean configure(Node rootNode) {
-		// TODO Auto-generated method stub
-		return false;
+		NodeList nodes = rootNode.getOwnerDocument().getElementsByTagName("tunnel");
+
+		if (nodes.getLength() == 0) {
+			log.fatal("No tunneller configured");
+			return false;
+		}
+		
+		for (int i=0; i<nodes.getLength(); i++) {
+			TunnelKeepaliveThread newThread = new TunnelKeepaliveThread();
+			if (!newThread.configure(nodes.item(i))) {
+				log.fatal("Error configuring tunneller");
+				return false;
+			}
+			tunnelThreads.add(newThread);
+		}
+
+		return true;
 	}
 
 	@Override
