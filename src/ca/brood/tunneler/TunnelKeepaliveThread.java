@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Charles Hache <chache@brood.ca>. All rights reserved. 
+ * Copyright (c) 2013 Charles Hache <chalz@member.fsf.org>. All rights reserved. 
  * 
  * This file is part of the tunneller project.
  * tunneller is free software: you can redistribute it and/or modify
