@@ -1,0 +1,35 @@
+<!--
+  Copyright (c) 2013 Charles Hache. All rights reserved. 
+  
+  This file is part of the tunneller project.
+  tunneller is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  tunneller is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with tunneller.  If not, see <http://www.gnu.org/licenses/>.
+  
+  Contributors:
+      Charles Hache - initial API and implementation
+-->
+<!ELEMENT tunneller (tunnel*)>
+
+<!ELEMENT tunnel (user,host,port?,(password|(keyfile,passphrase?)),forward*)>
+<!ELEMENT user (#PCDATA)>
+<!ELEMENT host (#PCDATA)>
+<!ELEMENT port (#PCDATA)>
+<!ELEMENT password (#PCDATA)>
+<!ELEMENT keyfile (#PCDATA)>
+<!ELEMENT passphrase (#PCDATA)>
+
+<!ELEMENT forward (localPort,host,remotePort)>
+<!ATTLIST forward type (local|L|remote|R) #REQUIRED>
+<!ELEMENT localPort (#PCDATA)>
+<!ELEMENT remotePort (#PCDATA)>
+
