@@ -56,11 +56,11 @@ fi
 case "$2" in
         start)
                 echo -n "Starting daemon "
-				#$JSVC -cp $CP -home $JVM -cwd $HOME_DIR -pidfile $PID_FILE -procname $PROCESS_NAME $START_CLASS
+				$JSVC -cp $CP -home $JVM -cwd $HOME_DIR -pidfile $PID_FILE -procname $PROCESS_NAME $START_CLASS
                 ;;
         stop)
                 echo -n "Shutting down daemon "
-				#$JSVC -stop -cp $CP -home $JVM -cwd $HOME_DIR -pidfile $PID_FILE -procname $PROCESS_NAME $START_CLASS
+				$JSVC -stop -cp $CP -home $JVM -cwd $HOME_DIR -pidfile $PID_FILE -procname $PROCESS_NAME $START_CLASS
                 ;;
         restart)
                 ## Stop the service and regardless of whether it was
