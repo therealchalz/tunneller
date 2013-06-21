@@ -17,6 +17,8 @@ commons-daemon-1.0.13.jar
 log4j-api-2.0-beta7.jar
 log4j-core-2.0-beta7.jar
 brootils.jar
+jsvc binary from the commons-daemon project (for linux)
+procrun binary from the commons-daemon project (for windows)
 
 See the brootils project/library for info on what that library needs.
 
@@ -31,10 +33,12 @@ INSTALLATION
 Linux
 
 Put all the *.jar files in /usr/share/java.
+Install the jsvc binary to /usr/local/bin/jsvc.
 Put put the config files (tunneller.dtd, tunneller.xml, log4j.xml) in
 /etc/tunneller.  Logs will be saved here as well.
 Put the tunneller.init.d.sh script in /etc/init.d/ (rename it for your 
 convenience)
+Ensure that the tunneller init.d script is executable.
 Install the init.d script with update-rc.d
 
 Windows
