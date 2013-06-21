@@ -18,7 +18,7 @@
  * Contributors:
  *     Charles Hache <chalz@member.fsf.org> - initial API and implementation
  ******************************************************************************/
-package ca.brood.tunneler;
+package ca.brood.tunneller;
 
 import java.util.ArrayList;
 
@@ -136,13 +136,13 @@ public class Tunneller  implements Daemon, XMLConfigurable {
 	@Override
 	public void start() throws Exception {
 		log.info("Linux daemon received start command");
-		tunnellerDaemon.start();
+		tunnellerDaemon.tunnellerStart();
 	}
 
 	@Override
 	public void stop() throws Exception {
 		log.info("Linux daemon received stop command");
-		tunnellerDaemon.stop();
+		tunnellerDaemon.tunnellerStop();
 	}
 	/**
      * Static method called by prunsrv to start/stop

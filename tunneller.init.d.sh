@@ -31,12 +31,14 @@ JSVC=/usr/local/bin/jsvc
 JVM=/usr/lib/jvm/default-java
 
 CP=$CPHOME/activation.jar:\
-$CPHOME/brootils.jar:\
+$CPHOME/brootils-1.0.jar:\
 $CPHOME/commons-daemon-1.0.13.jar:\
 $CPHOME/jsch-0.1.49.jar:\
 $CPHOME/log4j-1.2.16.jar:\
+$CPHOME/log4j-api-2.0-beta7.jar:\
+$CPHOME/log4j-core-2.0-beta7.jar:\
 $CPHOME/mail.jar:\
-$CPHOME/tunneller.jar
+$CPHOME/tunneller-1.1.jar
 
 # Verify the arguments before we nohup so we can send
 # error messages to the tty instead of to nohup.out
@@ -48,7 +50,7 @@ fi
 # If the first argument is not nohup, then nohup this
 # script.
 if [ "$1" != "nohup" ]; then
-	nohup ./$0 nohup $1 &
+	nohup $0 nohup $1 &
 	exit 0
 fi
 

@@ -18,7 +18,7 @@
  * Contributors:
  *     Charles Hache <chalz@member.fsf.org> - initial API and implementation
  ******************************************************************************/
-package ca.brood.tunneler;
+package ca.brood.tunneller;
 
 import java.io.File;
 import java.util.ArrayList;
