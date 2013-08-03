@@ -33,7 +33,7 @@ INSTALLATION
 Linux
 
 Put all the *.jar files in /usr/share/java.
-Install the jsvc binary to /usr/local/bin/jsvc.
+Install the jsvc binary to /usr/bin/jsvc.
 Put put the config files (tunneller.dtd, tunneller.xml, log4j.xml) in
 /etc/tunneller.  Logs will be saved here as well.
 Put the tunneller.init.d.sh script in /etc/init.d/ (rename it for your 

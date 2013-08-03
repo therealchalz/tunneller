@@ -4,7 +4,7 @@
 # usual init.d script install procedures.
 
 # Setup/Installation:
-# Put JSVC in /usr/local/bin (or update its location below)
+# Put JSVC in /usr/bin (or update its location below)
 # Put tunneller.jar and all of the required libs in /usr/share/java
 # Put required config files and stuff in /etc/tunneller
 
@@ -27,7 +27,7 @@ HOME_DIR=/etc/tunneller
 PID_FILE=/var/run/tunneller.pid
 
 CPHOME=/usr/share/java
-JSVC=/usr/local/bin/jsvc
+JSVC=/usr/bin/jsvc
 JVM=/usr/lib/jvm/default-java
 
 CP=$CPHOME/activation.jar:\
