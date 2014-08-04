@@ -16,9 +16,9 @@ This program depends directly on the following libraries:
 commons-daemon-1.0.13.jar
 log4j-api-2.0-beta7.jar
 log4j-core-2.0-beta7.jar
-brootils.jar
+brootils-1.0.jar
 jsvc binary from the commons-daemon project (for linux)
-procrun binary from the commons-daemon project (for windows)
+procrun/prunsrv binary from the commons-daemon project (for windows)
 
 See the brootils project/library for info on what that library needs.
 
@@ -34,7 +34,7 @@ Linux
 
 Put all the *.jar files in /usr/share/java.
 Install the jsvc binary to /usr/bin/jsvc.
-Put put the config files (tunneller.dtd, tunneller.xml, log4j.xml) in
+Put the config files (tunneller.dtd, tunneller.xml, log4j.xml) in
 /etc/tunneller.  Logs will be saved here as well.
 Put the tunneller.init.d.sh script in /etc/init.d/ (rename it for your 
 convenience)
@@ -42,5 +42,9 @@ Ensure that the tunneller init.d script is executable.
 Install the init.d script with update-rc.d
 
 Windows
-
-TODO
+Put all the *.jar files in C:\tunneller.
+Install prunsrv to somewhere PATH-accessible.
+Put the config files (tunneller.dtd, tunneller.xml, log4j.xml) in
+C:\tunneller.  Logs will be saved here as well.
+Install the service with the following command (without quotes):
+"prunsrv //IS//Tunneller --Description="SSH Tunnel Keepalive Service" --DisplayName="Tunneller" --Startup=auto --Classpath=c:\tunneller\* --StartMode=jvm --StartPath=c:\tunneller --StartClass=ca.brood.tunneller.Tunneller --StartMethod=windowsService --StartParams=start --StopMode=jvm --StopClass=ca.brood.tunneller.Tunneller --StopMethod=windowsService --StopParams=stop --LogPath=C:\tunneller --LogPrefix=TunnellerServiceLog --StdOutput=auto --StdError=auto"
