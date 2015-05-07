@@ -38,14 +38,16 @@ import ca.brood.brootils.xml.XMLConfigurable;
  *
  */
 public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
-	private int pollingInterval;
+	private int retryIntervalMs;
 	private Logger log;
 	private Collection<PortForward> portForwards;
 	private SSHSession ssh;
 	private boolean keepRunning;
 	private Object runningLock;
 	private Thread myThread;
-	private boolean loggedError;
+	private int errorCount;
+	private int logOnNextErrorCount;
+	private int errorLogMaxInterval;
 	
 	//Connection parameters
 	private String user = "";
@@ -63,10 +65,10 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 		keepRunning = false;
 		ssh = null;
 		runningLock = new Object();
-		pollingInterval = 10000;	//10 seconds
 		portForwards = new ArrayList<PortForward>();
 		myThread = new Thread(this);
-		loggedError = false;
+		errorCount = 0;
+		logOnNextErrorCount = 1;
 	}
 	
 	/** Adds a local port to forward.
@@ -111,6 +113,15 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 	 */
 	@Override
 	public boolean configure(Node rootNode) {
+		
+		retryIntervalMs = 10000;	//10 seconds
+		port = 22;
+		passphrase = null;
+		keyfile = "";
+		host = "";
+		password = "";
+		user = "";
+		portForwards = new ArrayList<PortForward>();
 
 		NodeList elements = rootNode.getChildNodes();
 		for (int i=0; i<elements.getLength(); i++) {
@@ -135,6 +146,12 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 				} catch (Exception e) {
 					log.warn("Invalid port number specified: "+element.getFirstChild().getNodeValue()+". Using default of 22.");
 				}
+			} else if ("retryIntervalMs".equalsIgnoreCase(element.getNodeName())) {
+				try {
+					retryIntervalMs = Integer.parseInt(element.getFirstChild().getNodeValue());
+				} catch (Exception e) {
+					log.warn("Invalid retry interval specified: "+element.getFirstChild().getNodeValue()+". Using default of 10000." );
+				}
 			} else if ("forward".equalsIgnoreCase(element.getNodeName())) {
 				PortForward f = new PortForward();
 				if (f.configure(element)) {
@@ -142,7 +159,7 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 				}
 			} else {
 				log.warn("Got unexpected node in config: "+element.getNodeName());
-			}			
+			}
 		}
 
 		if (password.equals("") && keyfile.equals("")) {
@@ -170,16 +187,9 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 			return false;
 		}
 		
+		errorLogMaxInterval = (86400*1000)/retryIntervalMs;	//log a minimum of once per day
+		
 		return true;
-	}
-	
-	/** Configures the remote host.
-	 * @param host The remote host.
-	 * @param port The remote port.
-	 * @param user The user for authentication.
-	 */
-	public void configure(String host, int port, String user) {
-		ssh.configure(host, port, user);
 	}
 	
 	/** Check if this {@link TunnelKeepaliveThread} is running.
@@ -206,13 +216,11 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 		
 		while (getRunning()) {
 			if (!ssh.areTunnelsActive()) {
-				if (!respawn()) {
-					log.warn("***Tunnels failed to restart***");
-				}
+				respawn();
 			}
 			
 			try {
-				Thread.sleep(pollingInterval);
+				Thread.sleep(retryIntervalMs);
 			} catch (InterruptedException e) { }
 		}
 		
@@ -292,17 +300,22 @@ public class TunnelKeepaliveThread implements Runnable, XMLConfigurable {
 			}
 			
 		} catch (Exception e) {
-			if (!loggedError) {			
-				log.error("Error connecting tunnel" , e);
-				loggedError = true;
+			if (errorCount == logOnNextErrorCount) {			
+				log.error("Error connecting tunnel ("+errorCount+" errors): " , e);
+				if (logOnNextErrorCount < errorLogMaxInterval)
+					logOnNextErrorCount += logOnNextErrorCount;
+				else
+					logOnNextErrorCount += errorLogMaxInterval;
 			}
+			errorCount ++;
 			ssh.close();
 			ret = false;
 		}
 		
 		if (ret) {
 			log.info("Tunnels connected successfully!");
-			loggedError = false;
+			errorCount = 0;
+			logOnNextErrorCount = 1;
 		}
 		
 		return ret;

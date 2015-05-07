@@ -4,10 +4,19 @@
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%-4r [%t] %-5p %c - %m%n"/>
     </Console>
+    <RollingFile name="RollingFile" fileName="tunneller.log" filePattern="tunneller.log.%i">
+      <PatternLayout pattern="%d %r [%t] %p %c - %m%n"/>
+      <Policies>
+        <OnStartupTriggeringPolicy />
+        <SizeBasedTriggeringPolicy size="20MB" />
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
   </appenders>
   <loggers>
     <root level="trace">
-      <appender-ref ref="Console"/>
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="RollingFile"/>
     </root>
   </loggers>
 </configuration>

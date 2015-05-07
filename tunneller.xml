@@ -27,6 +27,7 @@
 		<!--
 		<keyfile>ssh/id_rsa</keyfile>
 		-->
+		<retryIntervalMs>10000</retryIntervalMs>
 		<forward type="L">
 			<localPort>8085</localPort>
 			<host>127.0.0.1</host>

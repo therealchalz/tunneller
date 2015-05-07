@@ -20,13 +20,14 @@ Contributors:
 -->
 <!ELEMENT tunneller (tunnel*)>
 
-<!ELEMENT tunnel (user,host,port?,(password|(keyfile,passphrase?)),forward*)>
+<!ELEMENT tunnel (user,host,port?,(password|(keyfile,passphrase?)),retryIntervalMs?,forward*)>
 <!ELEMENT user (#PCDATA)>
 <!ELEMENT host (#PCDATA)>
 <!ELEMENT port (#PCDATA)>
 <!ELEMENT password (#PCDATA)>
 <!ELEMENT keyfile (#PCDATA)>
 <!ELEMENT passphrase (#PCDATA)>
+<!ELEMENT retryIntervalMs (#PCDATA)>
 
 <!ELEMENT forward (localPort,host,remotePort)>
 <!ATTLIST forward type (local|L|remote|R) #REQUIRED>
